@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  php-app:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    restart: always
