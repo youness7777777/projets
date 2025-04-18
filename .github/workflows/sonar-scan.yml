@@ -1,29 +1,44 @@
-name: CI/CD workflow for Maven Build and Sonar Code scan
+name: CI/CD workflow for PHP Build and Sonar Code Scan
+
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
       with:
-        distribution: 'adopt'
-        java-version: '11'
-    - name: Build with Maven
-      run: mvn clean install -f MyWebApp/pom.xml
+        php-version: '7.4'  # Specify PHP version, update as needed (e.g., '8.0')
+
+    - name: Install Composer dependencies
+      run: |
+        curl -sS https://getcomposer.org/installer | php
+        php composer.phar install  # Install PHP dependencies using Composer
+
+    - name: Run PHP unit tests (optional)
+      run: |
+        ./vendor/bin/phpunit --coverage-text  # Run tests (ensure PHPUnit is installed in your project)
+
+    - name: Build with PHP (optional)
+      run: |
+        php -f MyWebApp/index.php  # You can specify a custom build step here if necessary
+
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       with:
-        projectBaseDir: .
+        projectBaseDir: .  # Ensure this points to the correct project directory
         args: >
-          -Dsonar.organization=my-org
-          -Dsonar.projectKey=my-Java-web-app
+          -Dsonar.organization=my-org  # Replace with your actual SonarQube organization key
+          -Dsonar.projectKey=bank_website  # Replace with your SonarQube project key for bank_website
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_TOKEN: sqa_45d7cbf32ae5b9232f45547b2f4bc3a59900aa54 # Store the SonarQube token in GitHub secrets
+        SONAR_HOST_URL: http://localhost:9000
