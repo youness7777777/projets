@@ -1,0 +1,8 @@
+{
+  "name": "youness7777777/bank-website",
+  "description": "A description of your bank website project",
+  "require": {
+    "php": "^7.4 || ^8.0",
+    "some/package": "^1.0"  # Replace with actual packages your project uses
+  }
+}
