@@ -17,11 +17,11 @@ jobs:
           
       - uses: SonarSource/sonarqube-scan-action@v5
         env:
-          SONAR_TOKEN: ${{ secrets.BANK }}   # Use the BANK secret for the SonarQube token
-          SONAR_HOST_URL: ${{ secrets.BANK_URL }}   # Use the BANK_URL secret for the SonarQube URL
+          SONAR_TOKEN: ${{ secrets.bank }}   # Use the BANK secret for the SonarQube token
+          SONAR_HOST_URL: ${{ secrets.bank_url }}   # Use the BANK_URL secret for the SonarQube URL
 
       # Uncomment this step to fail the job if the Quality Gate fails
       # - uses: SonarSource/sonarqube-quality-gate-action@v1
       #   timeout-minutes: 5
       #   env:
-      #     SONAR_TOKEN: ${{ secrets.BANK }}
+      #     SONAR_TOKEN: ${{ secrets.bank }}
