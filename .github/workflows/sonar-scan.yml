@@ -1,44 +1,27 @@
-name: CI/CD workflow for PHP Build and Sonar Code Scan
+name: Build
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    name: Build and analyze
+    runs-on: windows-latest
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '7.4'  # Specify PHP version, update as needed (e.g., '8.0')
-
-    - name: Install Composer dependencies
-      run: |
-        curl -sS https://getcomposer.org/installer | php
-        php composer.phar install  # Install PHP dependencies using Composer
-
-    - name: Run PHP unit tests (optional)
-      run: |
-        ./vendor/bin/phpunit --coverage-text  # Run tests (ensure PHPUnit is installed in your project)
-
-    - name: Build with PHP (optional)
-      run: |
-        php -f MyWebApp/index.php  # You can specify a custom build step here if necessary
-
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      with:
-        projectBaseDir: .  # Ensure this points to the correct project directory
-        args: >
-          -Dsonar.organization=my-org  # Replace with your actual SonarQube organization key
-          -Dsonar.projectKey=bank_website  # Replace with your SonarQube project key for bank_website
-      env:
-        SONAR_TOKEN: sqa_45d7cbf32ae5b9232f45547b2f4bc3a59900aa54 # Store the SonarQube token in GitHub secrets
-        SONAR_HOST_URL: http://localhost:9000
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      # If you wish to fail your job when the Quality Gate is red, uncomment the
+      # following lines. This would typically be used to fail a deployment.
+      # - uses: SonarSource/sonarqube-quality-gate-action@v1
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
