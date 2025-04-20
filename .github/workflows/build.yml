@@ -19,9 +19,10 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.bank }}   # Use the BANK secret for the SonarQube token
           SONAR_HOST_URL: ${{ secrets.bank_url }}   # Use the BANK_URL secret for the SonarQube URL
+          SONAR_PROJECT_KEY: "bank_website"  # Define your project key here
 
       # Uncomment this step to fail the job if the Quality Gate fails
       # - uses: SonarSource/sonarqube-quality-gate-action@v1
       #   timeout-minutes: 5
       #   env:
-      #     SONAR_TOKEN: ${{ secrets.bank }}
+      #     SONAR_TOKEN: ${{ secrets.BANK }}
